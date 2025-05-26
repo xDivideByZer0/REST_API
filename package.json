@@ -4,7 +4,8 @@
   "description": "This repo is the development repo for building a REST API that will be deployed to AWS. It will also contain functional and integration test suites.",
   "main": "index.js",
   "scripts": {
-    "start": "ts-node src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
     "dev": "nodemon --watch src/**/*.ts --exec ts-node src/index.ts"
   },
   "repository": {
