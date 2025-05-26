@@ -5,8 +5,6 @@ import express, { Application } from 'express';
 import bodyParser from 'body-parser';
 import itemsRouter from './routes/items';
 
-console.log('Loaded AWS_REGION:', process.env.AWS_REGION);
-
 const app: Application = express();
 const port = process.env.PORT || 3000;
 

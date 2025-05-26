@@ -30,13 +30,26 @@ const ddbDocClient = DynamoDBDocumentClient.from(ddbClient);
 // Use the DynamoDB table name from the environment variable
 const TABLE_NAME = process.env.DYNAMODB_TABLE || 'Items';
 
-export async function getItems() {
+// export async function getItems() {
+//   const command = new ScanCommand({ TableName: TABLE_NAME });
+//   const result = await ddbDocClient.send(command);
+//   return result.Items;
+// }
+
+export async function getItems(limit: number = 10) {
   const command = new ScanCommand({ TableName: TABLE_NAME });
   const result = await ddbDocClient.send(command);
-  return result.Items;
+
+  // Sort descending by `causeVotes` and take top `limit`
+  const sortedItems = (result.Items || [])
+    .sort((a, b) => (b.causeVotes || 0) - (a.causeVotes || 0))
+    .slice(0, limit);
+
+  return sortedItems;
 }
 
-export async function getItem(id: string) {
+
+export async function getItem(id: number) {
   const command = new GetCommand({
     TableName: TABLE_NAME,
     Key: { id },
@@ -48,7 +61,8 @@ export async function getItem(id: string) {
 export async function createItem(item: any) {
   // Ensure the item has a unique id
   if (!item.id) {
-    item.id = Date.now().toString();
+    // item.id = Date.now().toString();
+    item.id = Date.now();
   }
   const command = new PutCommand({
     TableName: TABLE_NAME,
@@ -58,7 +72,7 @@ export async function createItem(item: any) {
   return item;
 }
 
-export async function updateItem(id: string, updates: any) {
+export async function updateItem(id: number, updates: any) {
   const existing = await getItem(id);
   if (!existing) {
     throw new Error('Item not found');
@@ -72,7 +86,7 @@ export async function updateItem(id: string, updates: any) {
   return updatedItem;
 }
 
-export async function deleteItem(id: string) {
+export async function deleteItem(id: number) {
   const command = new DeleteCommand({
     TableName: TABLE_NAME,
     Key: { id },
