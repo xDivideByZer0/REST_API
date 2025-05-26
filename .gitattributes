@@ -1,1 +1,9 @@
-* text=auto
+# Force LF endings for everything
+* text=auto eol=lf
+
+# Treat these files as binary (no conversion)
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.mp4 binary
