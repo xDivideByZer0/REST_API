@@ -4,14 +4,15 @@ FROM node:18
 # Set working directory
 WORKDIR /app
 
-# Copy package files first to optimize Docker layer caching
+# Copy package files and install deps
 COPY package*.json ./
 
 # Install dependencies
-RUN npm install --production
+RUN npm install
 
-# Copy the rest of the app
+# Copy source code and build
 COPY . .
+RUN npm run build
 
 # Set the environment port (required by App Runner)
 ENV PORT=8080
